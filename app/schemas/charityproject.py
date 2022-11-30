@@ -8,22 +8,11 @@ class CharityProjectBase(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str]
     full_amount: Optional[int]
-    invested_amount: Optional[int] = Field(0)
-    fully_invested: Optional[bool] = Field(False)
-    create_date: Optional[datetime] = Field(
-        datetime.now(), example=datetime.now().isoformat(timespec="minutes")
-    )
-    close_date: Optional[datetime] = Field(
-        None, example=datetime.now().isoformat(timespec="minutes")
-    )
-
-    class Config:
-        extra = Extra.forbid
 
 
 class CharityProjectCreate(CharityProjectBase):
     name: str = Field(..., min_length=1, max_length=100)
-    description: str
+    description: str = Field(..., min_length=1)
     full_amount: int
 
 
@@ -34,10 +23,16 @@ class CharityProjectUpdate(CharityProjectBase):
             raise ValueError('Имя проекта не может быть пустым!')
         return value
 
+    class Config:
+        extra = Extra.forbid
 
 
-class CharityProjectRoomDB(CharityProjectCreate):
+class CharityProjectRoomDB(CharityProjectBase):
     id: int
+    invested_amount: Optional[int]
+    fully_invested: Optional[bool]
+    create_date: Optional[datetime]
+    close_date: Optional[datetime]
 
     class Config:
         orm_mode = True
