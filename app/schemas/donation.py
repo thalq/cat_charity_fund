@@ -1,37 +1,27 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Extra, Field, validator
+from pydantic import BaseModel, Extra, Field
 
 
-class DonationBase(BaseModel):
-    user_id: Optional[int]
+class DonationCreate(BaseModel):
+    full_amount: int = Field(..., gt=0)
     comment: Optional[str]
-    full_amount: Optional[int]
-    invested_amount: Optional[int] = Field(0)
-    fully_invested: Optional[bool] = Field(False)
-    create_date: Optional[datetime] = Field(
-        datetime.now(), example=datetime.now().isoformat(timespec="minutes")
-    )
-    close_date: Optional[datetime] = Field(
-        None, example=datetime.now().isoformat(timespec="minutes")
-    )
 
     class Config:
         extra = Extra.forbid
 
 
-class DonationCreate(BaseModel):
-    full_amount: int
-    comment: Optional[str]
-
-
 class DonationDB(DonationCreate):
     id: int
-    create_date: Optional[datetime]
-    close_date: Optional[datetime]
-    fully_invested: Optional[bool]
-    user_id: Optional[int]
+    create_date: datetime
 
     class Config:
         orm_mode = True
+
+
+class DonationSuperUserDB(DonationDB):
+    user_id: int
+    invested_amount: int
+    fully_invested: bool
+    close_date: Optional[datetime]
