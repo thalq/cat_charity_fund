@@ -47,6 +47,7 @@ async def get_all_donations(
     """
     return await donation_crud.get_multi(session)
 
+
 @router.get(
     '/my',
     response_model=List[DonationDB],
