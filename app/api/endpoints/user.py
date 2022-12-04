@@ -5,6 +5,9 @@ from app.schemas.user import UserCreate, UserRead, UserUpdate
 
 router = APIRouter()
 
+
+DETAIL = "Удаление пользователей запрещено!"
+
 router.include_router(
     fastapi_users.get_auth_router(auth_backend),
     prefix="/auth/jwt",
@@ -25,4 +28,4 @@ router.include_router(
 @router.delete("/users/{id}", tags=["users"], deprecated=True)
 def delete_user(id: str):
     """Не используйте удаление, деактивируйте пользователей."""
-    raise HTTPException(status_code=405, detail="Удаление пользователей запрещено!")
+    raise HTTPException(status_code=405, detail=DETAIL)

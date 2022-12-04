@@ -87,8 +87,7 @@ async def get_all_charity_projects(
     """
     Получить список всех проектов может любой юзер
     """
-    all_projects = await charity_project_crud.get_multi(session)
-    return all_projects
+    return await charity_project_crud.get_multi(session)
 
 
 @router.delete(
